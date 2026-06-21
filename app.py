@@ -10,6 +10,19 @@ def get_patient(code):
     patient=cursor.fetchone()
     conn.close()
     return patient
+@app.route("/patients", methods=["GET"])
+def get_patients():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM patients")
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify([dict(row) for row in rows])
 @app.route("/patient",methods=["POST"])
 def add_patient():
     data=request.get_json()
